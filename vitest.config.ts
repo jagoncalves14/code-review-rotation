@@ -1,7 +1,7 @@
 import path from 'node:path'
-import { defineConfig } from 'vitest/config'
 import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
+import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	plugins: [
@@ -22,6 +22,7 @@ export default defineConfig({
 		include: ['**/*.spec.ts'],
 		environment: 'jsdom',
 		globals: true,
+		setupFiles: ['./nuxt.test-utils.ts'],
 	},
 	resolve: {
 		alias: {
