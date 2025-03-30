@@ -1,0 +1,85 @@
+{
+	"type": "module",
+	"private": true,
+	"packageManager": "pnpm@10.7.0",
+	"scripts": {
+		"build": "nuxi build",
+		"dev": "nuxi dev",
+		"preview": "nuxi preview",
+		"generate": "nuxi generate",
+		"postinstall": "nuxi prepare",
+		"start": "node .output/server/index.mjs",
+		"start:generate": "npx serve .output/public",
+		"lint": "eslint \"**/*.{vue,js,ts,tsx}\"",
+		"lint:fix": "eslint \"**/*.{vue,js,ts,tsx}\" --fix",
+		"stylelint": "stylelint \"**/*.{html,vue,css}\" --cache",
+		"stylelint:fix": "stylelint \"**/*.{html,vue,css}\" --cache --fix",
+		"prepare": "husky",
+		"test": "playwright test",
+		"test:ui": "playwright test --ui",
+		"test:report": "playwright show-report test/report",
+		"typecheck": "vue-tsc --noEmit",
+		"unit": "TZ=UTC vitest run",
+		"unit:u": "TZ=UTC vitest run -u",
+		"unit:watch": "TZ=UTC vitest watch"
+	},
+	"dependencies": {
+		"@nordhealth/components": "^3.22.0",
+		"@nordhealth/css": "^3.4.0",
+		"nuxt": "^3.16.1"
+	},
+	"devDependencies": {
+		"@antfu/eslint-config": "^4.11.0",
+		"@commitlint/cli": "^19.8.0",
+		"@commitlint/config-conventional": "^19.8.0",
+		"@iconify-json/carbon": "^1.2.8",
+		"@iconify-json/twemoji": "^1.2.2",
+		"@nuxt/test-utils": "^3.17.2",
+		"@nuxtjs/color-mode": "^3.5.2",
+		"@nuxtjs/supabase": "^1.5.0",
+		"@playwright/test": "^1.51.1",
+		"@unocss/eslint-config": "^0.60.4",
+		"@unocss/eslint-plugin": "^0.60.4",
+		"@unocss/nuxt": "^0.60.4",
+		"@unocss/postcss": "^0.60.4",
+		"@unocss/preset-icons": "^0.60.4",
+		"@unocss/preset-wind": "^0.60.4",
+		"@unocss/transformer-directives": "^0.60.4",
+		"@vueuse/nuxt": "^13.0.0",
+		"consola": "^3.4.2",
+		"eslint": "^9.0.0",
+		"eslint-plugin-format": "^1.0.1",
+		"husky": "^9.1.7",
+		"jsdom": "^26.0.0",
+		"lint-staged": "^15.5.0",
+		"postcss-html": "^1.8.0",
+		"sass": "^1.86.0",
+		"stylelint": "^16.17.0",
+		"stylelint-config-recess-order": "^6.0.0",
+		"stylelint-config-recommended-vue": "^1.6.0",
+		"stylelint-config-standard-scss": "^14.0.0",
+		"typescript": "^5.8.2",
+		"unocss": "66.1.0-beta.7",
+		"unplugin-auto-import": "^19.1.2",
+		"vitest": "^3.0.9",
+		"vue-tsc": "^2.2.8",
+		"zod": "^3.24.2"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"eslint --fix"
+		],
+		"*.vue": [
+			"eslint --fix",
+			"stylelint --fix"
+		],
+		"*.{html,sass,scss}": [
+			"stylelint --fix"
+		]
+	},
+	"config": {
+		"commitizen": {
+			"path": "node_modules/cz-git"
+		}
+	}
+}

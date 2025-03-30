@@ -1,0 +1,24 @@
+@import url('@nordhealth/css');
+
+html,
+body,
+#__nuxt {
+  block-size: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background: var(--n-color-surface-raised);
+}
+
+body {
+  font-family: var(--n-font-family);
+  font-size: var(--n-font-size-m);
+  line-height: var(--n-line-height);
+  color: var(--n-color-text);
+  background-color: var(--n-color-surface);
+}
+
+.text-accent {
+  color: var(--n-color-accent);
+}
