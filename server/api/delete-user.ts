@@ -1,5 +1,5 @@
-import { createError } from 'h3'
 import { serverSupabaseServiceRole } from '#supabase/server'
+import { createError } from 'h3'
 
 export default eventHandler(async (event) => {
 	const client = serverSupabaseServiceRole(event)

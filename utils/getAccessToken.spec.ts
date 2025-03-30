@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from 'vitest'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { Mock } from 'vitest'
+import type { RouteLocationNormalizedLoaded } from 'vue-router'
+import { describe, expect, it, vi } from 'vitest'
 import getAccessToken from './getAccessToken'
 
 vi.mock('vue-router')

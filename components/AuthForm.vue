@@ -99,7 +99,7 @@ async function handleSubmit() {
 		return await handleSignIn()
 	} catch (error) {
 		// Server Side valition - errors should trigger an alert
-		if (error instanceof Error && !hasFormErrors) {
+		if (error instanceof Error && !hasFormErrors.value) {
 			alert(error.message)
 		}
 	} finally {

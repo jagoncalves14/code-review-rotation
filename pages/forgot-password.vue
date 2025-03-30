@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import forgotPassword from '@/services/auth/auth.forgot-password'
 import type { ForgotPasswordSchemaErrorsType, ForgotPasswordSchemaType } from '@/schemas/auth'
 import { ForgotPasswordSchema } from '@/schemas/auth'
+import forgotPassword from '@/services/auth/auth.forgot-password'
 
 useHead({
 	title: 'Nordhealth DS — Forgot password',
