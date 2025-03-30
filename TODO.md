@@ -1,0 +1,40 @@
+Pages:
+
+- Users list page
+  - Change password
+- User edit page
+  - Is Admin (checkbox)
+  - Name
+  - Permissions (view or edit)
+- Profile page
+  - Name
+  - Change password
+  - If "Is Admin", have banner informing if user is admin
+- Project creation page
+  - Project name
+  - Rotation time period (default 15 days)
+  - Day start of rotation period
+  - Number of reviewers to assign
+  - List of assignees
+  - List of reviewers
+  - State (Active, Draft or Inactive)
+- Project edit page
+  - Edit project name
+  - Edit rotation time period
+  - Edit day start of rotation period
+  - Edit Number of reviewers to assign
+  - Edit list of assignees
+  - Edit list of reviewers
+  - Edit State
+  - Delete
+    (Changes to active projects should have immediate effect)
+- Home page
+  - Filter bar with following filters:
+    - Search (input for searching for project names)
+  - List of all the Projects
+    - Each project showing the table with the active rotation
+- Project page
+  - Filter bar with following filters:
+    - Rotation time period (select with date ranges (start - end))
+    - Edit button to enable active mode
+  - Project showing table with the rotation

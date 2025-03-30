@@ -1,3 +1,10 @@
 {
-	"extends": "./.nuxt/tsconfig.json"
+	"extends": "./.nuxt/tsconfig.json",
+	"compilerOptions": {
+		"strict": true,
+		"skipLibCheck": true,
+		"types": ["vue-toastification"],
+		"typeRoots": ["./types", "./node_modules/@types"],
+		"module": "ESNext"
+	}
 }
