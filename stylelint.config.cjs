@@ -9,6 +9,8 @@ module.exports = {
 		'stylelint-config-recess-order', // Use the clean order for properties.
 	],
 	rules: {
+		// Custom property pattern - allows for custom properties to be used in the code
+		'custom-property-pattern': '^_?([a-z][a-z0-9]*)(-[a-z0-9]+)*$',
 		// Disable low-specificity selectors after overriding high-specificity selectors
 		'no-descending-specificity': null,
 		// Empty source code is prohibited
@@ -47,9 +49,6 @@ module.exports = {
 		// Pattern for specifying keyframe names
 		'keyframes-name-pattern': null,
 		// Specify the mode of the class selector
-		'selector-id-pattern': [
-			'^$|[a-z0-9]+(-[a-z0-9]+)*(__nuxt|$)',
-		],
 		'selector-id-pattern': [
 			'^$|[a-z0-9]+(-[a-z0-9]+)*(__nuxt|$)',
 		],
