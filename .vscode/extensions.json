@@ -1,11 +1,11 @@
 {
 	"recommendations": [
-		"vue.volar",
-		"editorconfig.editorconfig",
+		"Vue.volar",
 		"dbaeumer.vscode-eslint",
 		"esbenp.prettier-vscode",
 		"stylelint.vscode-stylelint",
-		"vscode-icons-team.vscode-icons",
-		"christian-kohler.path-intellisense"
+		"vitest.explorer",
+		"ms-playwright.playwright",
+		"antfu.goto-alias"
 	]
 }

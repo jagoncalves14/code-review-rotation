@@ -6,7 +6,7 @@ import { ProjectSchema } from '@/schemas/project'
 import createProject from '@/services/projects/projects.create'
 import BaseCombobox from '~/components/BaseCombobox.vue'
 
-useHead({
+definePageMeta({
 	title: 'Nordhealth DS — Create Project',
 })
 
