@@ -23,6 +23,7 @@ export default antfu(
 			'vue/multiline-html-element-content-newline': 'off',
 			'vue/valid-v-on': 'off',
 			'vue/no-v-html': 'off',
+			'vue/no-unused-vars': 'error',
 			'vue/html-closing-bracket-spacing': 'error',
 			'vue/html-closing-bracket-newline': ['error', {
 				singleline: 'never',

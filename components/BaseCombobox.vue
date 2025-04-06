@@ -93,7 +93,7 @@ export interface Props {
 	/**
 	 * Determines whether the combobox is required or not.
 	 * A combobox marked as required will be announced as such to users of assistive technology.
-	 * When using this property you need to also set “novalidate” attribute on a form element to prevent browser from displaying its own validation errors.
+	 * When using this property you need to also set "novalidate" attribute on a form element to prevent browser from displaying its own validation errors.
 	 */
 	required?: boolean
 	/**
@@ -321,7 +321,7 @@ function focusSelect() {
 	multiSelectWrapper?.focus()
 }
 
-const maxHeightBind = computed(() => {
+const maxHeight = computed(() => {
 	if (props.maxHeight) {
 		return props.maxHeight
 	}
@@ -603,7 +603,7 @@ defineExpose({
 	--ms-px: calc(var(--n-space-s) * 1.5);
 	--ms-ring-width: 1px;
 	--ms-ring-color: var(--n-color-accent);
-	--ms-max-height: v-bind(maxheightbind);
+	--ms-max-height: v-bind('maxHeight');
 	--ms-tag-py: 0;
 	--ms-tag-px: 0;
 	--ms-tag-my: 0;
