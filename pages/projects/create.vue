@@ -4,13 +4,13 @@ import type { ProjectSchemaErrorsType, ProjectSchemaType } from '@/schemas/proje
 import type { Option } from '~/components/BaseCombobox.vue'
 import { ProjectSchema } from '@/schemas/project'
 import createProject from '@/services/projects/projects.create'
-import { useToast } from 'vue-toastification'
 import BaseCombobox from '~/components/BaseCombobox.vue'
 
 useHead({
 	title: 'Nordhealth DS — Create Project',
 })
 
+const addToast = useAddToast()
 const router = useRouter()
 const isLoading = ref(false)
 const formErrors = ref<ProjectSchemaErrorsType>(null)
@@ -48,44 +48,35 @@ const formData = ref<ProjectSchemaType>({
 
 // Shared options for both comboboxes
 const sharedOptions = ref<Option[]>([])
+const assigneesOptions = computed(() => {
+	return sharedOptions.value.filter(option => formData.value.reviewers.includes(String(option.value)))
+})
+
+const reviewersOptions = computed(() => {
+	return sharedOptions.value.filter(option => formData.value.assignees.includes(String(option.value)))
+})
 
 // Update shared options when either field changes
-watch([() => formData.value.assignees, () => formData.value.reviewers], ([newAssignees, newReviewers]) => {
-	// Combine both arrays and remove duplicates
-	const allOptions = [...new Set([...newAssignees, ...newReviewers])]
+const currentOptions = computed(() => [...new Set([...formData.value.assignees, ...formData.value.reviewers])])
+function onComboboxFocus() {
+	// Filter out empty values, convert to strings, trim whitespace, and remove duplicates
+	const allOptions = [...new Set(
+		currentOptions.value
+			.filter(Boolean)
+			.map(value => String(value).trim()),
+	)]
+
 	sharedOptions.value = allOptions.map(option => ({
 		value: option,
 		label: option,
 	}))
-}, { immediate: true })
+}
 
 // Add handler for date change
 function onDateChange(event: Event) {
 	const target = event.target as HTMLInputElement
 	formData.value.startDate = target.value
 }
-
-const toast = useToast()
-
-const assignees = computed({
-	get: () => formData.value.assignees.map(option => ({
-		value: String(option),
-		label: String(option),
-	})),
-	set: (value: Option[]) => {
-		formData.value.assignees = value.map(option => String(option.value))
-	},
-})
-
-const reviewers = computed({
-	get: () => formData.value.reviewers.map(option => ({
-		value: String(option),
-		label: String(option),
-	})),
-	set: (value: Option[]) => {
-		formData.value.reviewers = value.map(option => String(option.value))
-	},
-})
 
 async function handleSubmit() {
 	isLoading.value = true
@@ -103,15 +94,14 @@ async function handleSubmit() {
 		const result = await createProject(formData.value)
 
 		if (result.success && result.projectId) {
-			toast.add({ title: 'Project created successfully', color: 'success' })
 			// Navigate to the project page
 			router.push(`/projects/${result.projectId}`)
 		} else {
-			toast.add({ title: result.error || 'Failed to create project', color: 'danger' })
+			addToast(result.error || 'Failed to create project', { variant: 'danger' })
 		}
 	} catch (error) {
 		if (error instanceof Error) {
-			toast.add({ title: error.message, color: 'danger' })
+			addToast(error.message, { variant: 'danger' })
 		}
 	} finally {
 		isLoading.value = false
@@ -191,32 +181,30 @@ async function handleSubmit() {
 								/>
 
 								<!-- Assignees -->
-								<div>
-									<BaseCombobox
-										v-model="assignees"
-										label="Assignees"
-										placeholder="Add assignee"
-										:error="formErrors?.assignees?._errors?.[0]"
-										:options="sharedOptions"
-										multiple
-										create-option
-										expand
-									/>
-								</div>
+								<BaseCombobox
+									v-model="formData.assignees"
+									label="Assignees"
+									placeholder="Add assignee"
+									:error="formErrors?.assignees?._errors?.[0]"
+									:options="assigneesOptions"
+									multiple
+									create-option
+									expand
+									@focus="onComboboxFocus"
+								/>
 
 								<!-- Reviewers -->
-								<div>
-									<BaseCombobox
-										v-model="reviewers"
-										label="Reviewers"
-										placeholder="Add reviewer"
-										:error="formErrors?.reviewers?._errors?.[0]"
-										:options="sharedOptions"
-										multiple
-										create-option
-										expand
-									/>
-								</div>
+								<BaseCombobox
+									v-model="formData.reviewers"
+									label="Reviewers"
+									placeholder="Add reviewer"
+									:error="formErrors?.reviewers?._errors?.[0]"
+									:options="reviewersOptions"
+									multiple
+									create-option
+									expand
+									@focus="onComboboxFocus"
+								/>
 
 								<!-- Submit Button -->
 								<nord-button

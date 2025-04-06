@@ -2,13 +2,13 @@
 import type { AccountSchemaErrorsType, AccountSchemaType } from '@/schemas/account'
 import getProfile from '@/services/auth/auth.get-profile'
 import updateAccount from '@/services/auth/auth.update-account'
-import { useToast } from 'vue-toastification'
 
-const user = useSupabaseUser()
-
-useHead({
+definePageMeta({
 	title: 'Nordhealth DS — Account',
 })
+
+const user = useSupabaseUser()
+const addToast = useAddToast()
 
 const isLoading = ref(false)
 
@@ -23,8 +23,6 @@ const formData = ref<AccountSchemaType>({
 
 const shouldRevealCurrentPassword = ref(false)
 const shouldRevealNewPassword = ref(false)
-
-const toast = useToast()
 
 function onRevealCurrentPasswordCheckboxChange(event: Event) {
 	shouldRevealCurrentPassword.value = (event.target as HTMLInputElement).checked
@@ -42,7 +40,7 @@ async function handleSubmit() {
 		const result = await updateAccount(formData.value)
 
 		if (result.success) {
-			toast.add({ title: 'Account updated successfully', color: 'success' })
+			addToast('Account updated successfully')
 			// Reset form on success
 			formData.value = {
 				name: formData.value.name,
@@ -59,11 +57,11 @@ async function handleSubmit() {
 				}
 				return
 			}
-			toast.add({ title: result.error || 'Failed to update account', color: 'danger' })
+			addToast(result.error || 'Failed to update account', { variant: 'danger' })
 		}
 	} catch (error) {
 		if (error instanceof Error) {
-			toast.add({ title: error.message, color: 'danger' })
+			addToast(error.message, { variant: 'danger' })
 		}
 	} finally {
 		isLoading.value = false
@@ -100,11 +98,11 @@ async function handleDeleteUser() {
 			throw new Error(`${response.status} ${response.statusText}`)
 		}
 
-		toast.add({ title: 'Your account has been deleted.', color: 'success' })
+		addToast('Your account has been deleted.')
 		navigateTo('/sign-in')
 	} catch (error) {
 		if (error instanceof Error) {
-			toast.add({ title: error.message, color: 'danger' })
+			addToast(error.message, { variant: 'danger' })
 		}
 	} finally {
 		isLoading.value = false

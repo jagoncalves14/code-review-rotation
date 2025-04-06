@@ -29,8 +29,7 @@
 		"@nordhealth/css": "^3.4.0",
 		"@vueuse/core": "^13.0.0",
 		"nuxt": "^3.16.1",
-		"radix-vue": "^1.9.17",
-		"vue-toastification": "^2.0.0-rc.5"
+		"radix-vue": "^1.9.17"
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^4.11.0",
