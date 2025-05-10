@@ -1,8 +1,21 @@
 <script setup lang="ts">
+import type { ToastGroup } from '@nordhealth/components'
+
 const user = useSupabaseUser()
 const route = useRoute()
 const currentRoutePath = computed(() => route.path)
 const supabase = useSupabaseClient()
+
+const toastGroupElement = useTemplateRef<ToastGroup>('toastGroupRef')
+const addToast: AddToast = (msg, options) => {
+	return toastGroupElement.value!.addToast(msg, options)
+}
+provideAddToast(addToast)
+
+function handleToastDismiss(e: Event) {
+	const target = e.target as HTMLElement
+	target.remove()
+}
 
 const isLoading = ref(false)
 async function handleSignOut() {
@@ -87,6 +100,12 @@ async function handleSignOut() {
 				</div>
 			</div>
 		</header>
+
 		<slot />
+
+		<nord-toast-group
+			ref="toastGroupRef"
+			@dismiss="handleToastDismiss"
+		/>
 	</div>
 </template>

@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Understand the project
+
+- Read the [README.md](mdc:README.md) file and understand the whole purpose of the app.
+- Use only the technologies stated in [README.md](mdc:README.md)
+- Understand how the project's Database is by readin [supabase-schema.sql](mdc:supabase-schema.sql) – It's also done in Supabase, important to know.

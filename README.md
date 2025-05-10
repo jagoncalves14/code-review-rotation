@@ -1,116 +1,179 @@
-<h1 align="center"><a href="https://github.com/jagoncalve14/nuxt3-nh-login" target="_blank">Vite 5 + Nuxt 3 + Supabase + Nordhealth Design System</a></h1>
+# 🔁 Code Reviewer Rotation App
 
-<p align="center">
-  <a href="https://nodejs.org/en/about/releases/">
-    <img src="https://img.shields.io/node/v/vite.svg" alt="node compatility" />
-  </a>
-  <a href="https://cn.vitejs.dev" rel="nofollow">
-    <img src="https://img.shields.io/badge/vite-5.0.2-3963bc.svg" alt="vite" style="max-width:100%;" />
-  </a>
-  <a href="https://github.com/nuxt/nuxt">
-    <img src="https://img.shields.io/badge/Nuxt-002E3B?style=for-the-badge&logo=nuxtdotjs&logoColor=#00DC82" alt="vue" />
-  </a>
-  <a href="https://github.com/jagoncalves14/nuxt3-nh-login/blob/master/LICENSE">
-    <img alt="LICENSE" src="https://img.shields.io/github/license/jagoncalves14/nuxt3-nh-login.svg" />
-  </a>
-</p>
+This project is a full-featured **Code Reviewer Rotation System** designed to replace the current workflow maintained via Google Sheets. It allows teams to create projects, assign code reviewers to developers, configure custom reviewer rules, and automate recurring rotations — all backed by **Supabase** and styled with the **Nordhealth Design System**.
 
-<p align='center'>
-  <b>Vite5</b> + <b>Nuxt3</b> + <b>TypeScript</b> + <b>Supabase</b> + <b>UnoCSS</b> + <b>Nordhealth Design System</b> + <b>ESLint + Stylelint</b>
-</p>
+---
 
-<p align='center'>
-  <a href="https://nuxt3-nh-login-jagoncalves14.vercel.app">Live Demo</a>
-</p>
+## 📌 Features
 
-## Features
+- 🔒 **Authentication** via Supabase Auth  
+- 👤 Developer **Profiles**: reusable across projects  
+- 🧱 Project-level control over:
+  - Assignees and Reviewers  
+  - Reviewer count per assignee  
+  - Fixed reviewer overrides  
+  - Rotation frequency & start date  
+- 🔁 Automatic reviewer rotations  
+- ✍️ Editable reviewer assignments  
+- 🧑‍💻 Manual re-generation of rotations (if current assignment is undesirable)  
+- 🗃️ Persistent **rotation history** (auto-saved only on scheduled runs)  
+- 💅 Built using Nuxt 3, UnoCSS, and Nordhealth DS  
 
-- ⚡️ [Vite 5](https://github.com/vitejs/vite) - born with fastness
-- 🖖 [Nuxt 3](https://github.com/nuxt/nuxt) - The intituive Vue Framework
-- 🎨 [UnoCSS](https://github.com/unocss/unocss) - The instant on-demand atomic CSS engine
-- 🧱 [Nordhealth Design System](https://nordhealth.design/) - Web Components for building the UI
-- 🔗 [Supabase](https://github.com/supabase/supabase) - The open source Firebase alternative
-- 😃 [Icons auto install](https://github.com/unplugin/unplugin-icons) - Access thousands of icons as components on-demand universally.
-- 🧰 [Husky](https://typicode.github.io/husky/#/) + [Lint-Staged](https://github.com/okonet/lint-staged) - Git Hook Tools
-- 🛡️ [EditorConfig](http://editorconfig.org) + [ESLint](http://eslint.org) + [Stylelint](https://stylelint.io) - Code Standards
-- 🔨 [Commitizen](https://cz-git.qbb.sh/zh) + [Commitlint](https://commitlint.js.org) - Submit Standards
+---
 
-## Coding Style
+## 🧰 Tech Stack
 
-- Use Composition API with [`<script setup>` SFC syntax](https://github.com/vuejs/rfcs/pull/227)
-- [ESLint](https://eslint.org)
-- [Stylelint](https://stylelint.io)
+| Layer        | Technology                                |
+|--------------|--------------------------------------------|
+| Frontend     | [Nuxt 3](https://nuxt.com/)                |
+| Styling      | [UnoCSS](https://unocss.dev/), [Nord Design System](https://nordhealth.design) |
+| Auth & DB    | [Supabase](https://supabase.com/)          |
+| Utilities    | TypeScript, Zod, VueUse, Playwright, Vitest |
+| CI/Linting   | ESLint, Stylelint, Husky, Commitlint       |
 
-## Development Tools
+---
 
-- [pnpm](https://pnpm.io/) - fast, disk space efficient package manager
-- [Visual Stuido Code Extensions](./.vscode/extensions.json)
-  - [Vite](https://marketplace.visualstudio.com/items?itemName=antfu.vite) - Fire up Vite server automatically
-  - [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) - Vue 3 `<script setup>` IDE support
-  - [EditorConfig for VS Code](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig) - A solution for unifying code formats
-  - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) - Find and fix problems in your JavaScript code
-  - [StyleLint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) - A mighty, modern linter that helps you avoid errors and enforce conventions in your styles.
+## 📁 Project Structure
 
-## Try it now
+- **Projects**: top-level containers with settings for reviewer rotation  
+- **Profiles**: developer identity, reusable and linkable to users  
+- **Rotations**: auto- or manually-generated reviewer assignments  
+- **History**: stores reviewer assignment snapshots at each completed cycle  
 
-> Requires Node >= 20.00
+---
 
-### GitHub Template
+## 🚀 Getting Started
 
-[Create a repo from this template on GitHub](https://github.com/jagoncalves14/nuxt3-nh-login/generate).
-
-### Clone to local
-
-If you prefer to do it manually with the cleaner git history
+### 1. Clone the repo
 
 ```bash
-# [optional] if you are using Windows, you need to close the end-of-line conversion
-git config --global core.autocrlf input
-
-# clone repository
-git clone https://github.com/jagoncalves14/nuxt3-nh-login
-
-# open folder nuxt3-nh-login
-cd nuxt3-nh-login
-
-# install packages
-npm i
+git clone https://github.com/your-org/code-reviewer-rotation.git
+cd code-reviewer-rotation
 ```
 
-## Checklist
-
-When you use this template, try follow the checklist to update your info properly
-
-- [ ] Change the author name in `LICENSE`
-- [ ] Change the title in `App.vue`
-- [ ] Change the hostname in `vite.config.js`
-- [ ] Change the favicon in `public`
-- [ ] Remove the `.github` folder which contains the funding info
-- [ ] Clean up the READMEs and remove routes
-
-## Usage
-
-### Development
-
-> Just run and visit <http://localhost:3000>
+### 2. Install dependencies
 
 ```bash
-## install dependencies
 pnpm install
+```
 
-## set up
+### 3. Setup environment
+
+Copy and update `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Set your Supabase credentials and environment settings.
+
+### 4. Run the app locally
+
+```bash
 pnpm dev
 ```
 
-### Build
+### 5. Build for production
 
 ```bash
-## build
 pnpm build
 ```
 
-## License
+Serve the generated app:
 
-[MIT](http://opensource.org/licenses/MIT)
+```bash
+pnpm start
+# or for static site preview
+pnpm start:generate
+```
 
-Copyright (c) 2024 jagoncalves14
+---
+
+## 🧪 Testing
+
+- Unit tests (Vitest):
+
+```bash
+pnpm unit
+```
+
+- End-to-end tests (Playwright):
+
+```bash
+pnpm test
+```
+
+- Visual test runner UI:
+
+```bash
+pnpm test:ui
+```
+
+---
+
+## 🧹 Linting & Formatting
+
+- JavaScript & TypeScript:
+
+```bash
+pnpm lint
+pnpm lint:fix
+```
+
+- Styles:
+
+```bash
+pnpm stylelint
+pnpm stylelint:fix
+```
+
+---
+
+## 💡 Conventions
+
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).  
+- Pre-commit hooks are enforced using Husky + Lint-Staged.  
+- Typing and formatting are checked via ESLint, Stylelint, and Vue TSC.  
+
+---
+
+## 🔧 Supabase Integration
+
+This project uses Supabase for:
+
+- **Auth**: User sign-up, login, and profile linkage  
+- **Database**: Projects, Profiles, Rotations, History  
+- **Scheduled Functions / CRON**: Automatic rotation logic  
+- **RLS**: Row-level security to protect multi-user access  
+
+Ensure your Supabase project has:
+
+- Auth enabled  
+- Database tables matching the schema  
+- Scheduled functions to trigger automatic rotation on interval  
+
+---
+
+## 🧬 Database Schema
+
+The Supabase database structure used in this project is fully defined in [`supabase-schema.sql`](./supabase-schema.sql).  
+Use this as the source of truth for table definitions, relationships, and documentation for tools like Cursor.
+
+---
+
+## 📄 License
+
+MIT – © 2025 Provet Cloud
+
+---
+
+## 🙌 Acknowledgements
+
+- [Nordhealth Design System](https://nordhealth.design)  
+- [Nuxt](https://nuxt.com/)  
+- [Supabase](https://supabase.com/)  
+- [UnoCSS](https://unocss.dev/)  
+
+---
+
+_Contributions welcome!_
