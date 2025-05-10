@@ -9,3 +9,5 @@ alwaysApply: true
 - Read the [README.md](mdc:README.md) file and understand the whole purpose of the app.
 - Use only the technologies stated in [README.md](mdc:README.md)
 - Understand how the project's Database is by readin [supabase-schema.sql](mdc:supabase-schema.sql) – It's also done in Supabase, important to know.
+- Do not use `n-` CSS classes that don't exist in `node_modules/@nordhealth/css/lib/nord.css`
+- With Nuxt, avoid adding explicity imports as most things are already auto-imported. On a first try, do not import anything. Only import if we get Linting complaints.

@@ -67,6 +67,18 @@ async function handleSignOut() {
 							<li>
 								<NuxtLink
 									:class="{
+										'plain-link underline': currentRoutePath === '/users',
+										'text-gray-600 no-underline hover:text-gray-900': currentRoutePath !== '/users',
+									}"
+									class="block py-2 text-sm"
+									to="/users"
+								>
+									Users
+								</NuxtLink>
+							</li>
+							<li>
+								<NuxtLink
+									:class="{
 										'plain-link underline': currentRoutePath === '/account',
 										'text-gray-600 no-underline hover:text-gray-900': currentRoutePath !== '/account',
 									}"

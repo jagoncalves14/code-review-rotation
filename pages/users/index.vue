@@ -77,26 +77,24 @@ onMounted(fetchUsers)
 </script>
 
 <template>
-	<section class="n-spacing-m">
-		<nord-card>
-			<div class="n-spacing-m">
+	<section class="n-spacing-m n-margin-bs-xl mx-auto w-full max-w-screen-xl">
+		<nord-card padding="l">
+			<div slot="header">
 				<h1 class="n-typography-headline-large">Users</h1>
+			</div>
 
+			<div class="n-spacing-m">
 				<!-- Search & Filter Bar -->
 				<div class="n-spacing-s">
-					<form class="n-width-full" @submit.prevent="handleSearch">
+					<form @submit.prevent="handleSearch">
 						<div class="n-stack n-gap-s n-stack-horizontal-e">
-							<div>
-								<nord-input
-									v-model="searchQuery"
-									type="search"
-									placeholder="Search by name or email..."
-									class="n-width-full"
-								>
-									<nord-icon slot="suffix" name="search" />
-								</nord-input>
-							</div>
-
+							<nord-input
+								v-model="searchQuery"
+								type="search"
+								placeholder="Search by name or email..."
+							>
+								<nord-icon slot="suffix" name="search" />
+							</nord-input>
 							<nord-button
 								v-if="searchQuery"
 								variant="secondary"
@@ -110,7 +108,7 @@ onMounted(fetchUsers)
 				</div>
 
 				<!-- Users Table -->
-				<nord-table class="n-margin-bs-l n-width-full">
+				<nord-table class="n-margin-bs-l">
 					<table>
 						<thead>
 							<tr>
@@ -129,21 +127,24 @@ onMounted(fetchUsers)
 									<span v-else>User</span>
 								</td>
 								<td class="n-table-align-right">
-									<div class="n-stack-horizontal-e n-gap-s n-justify-end">
-										<nord-button
-											size="small"
-											variant="primary"
-											:to="`/users/${user.id}`"
-										>
-											Edit
-										</nord-button>
-										<nord-button
-											size="small"
-											variant="secondary"
-											@click="handleResetPassword(user.id)"
-										>
-											Reset Password
-										</nord-button>
+									<div class="n-stack-horizontal-e n-justify-end n-gap-s">
+										<NuxtLink :to="`/users/${user.id}`">
+											<nord-button
+												size="small"
+												variant="primary"
+											>
+												Edit
+											</nord-button>
+										</NuxtLink>
+										<NuxtLink :to="`/users/${user.id}`">
+											<nord-button
+												size="small"
+												variant="secondary"
+												@click="handleResetPassword(user.id)"
+											>
+												Reset Password
+											</nord-button>
+										</NuxtLink>
 									</div>
 								</td>
 							</tr>
@@ -151,7 +152,7 @@ onMounted(fetchUsers)
 						<tbody v-else-if="loading">
 							<tr>
 								<td colspan="4" class="n-text-center">
-									<nord-spinner class="n-margin-auto" size="medium" />
+									<nord-spinner size="medium" />
 								</td>
 							</tr>
 						</tbody>
@@ -168,7 +169,7 @@ onMounted(fetchUsers)
 				</nord-table>
 
 				<!-- Pagination -->
-				<div v-if="totalPages > 1" class="n-stack n-gap-s n-stack-horizontal-e n-margin-top-m">
+				<div v-if="totalPages > 1" class="n-stack n-gap-s n-stack-horizontal-e">
 					<div class="n-typography-body">
 						Showing {{ (page - 1) * pageSize + 1 }} to {{ Math.min(page * pageSize, totalCount) }} of {{ totalCount }} users
 					</div>

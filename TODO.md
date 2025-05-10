@@ -31,7 +31,7 @@ Admin panel to manage an individual user’s access level and permissions.
 
 ---
 
-## 3. **Profile Page** (Accessible by logged-in users)
+## 3. **Account Settings Page** (Accessible by logged-in users)
 
 User-facing profile settings page.
 
