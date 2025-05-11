@@ -27,7 +27,7 @@ const user = ref<UserForm>({
 })
 const loading = ref(true)
 const saving = ref(false)
-const sendResetPasswordEmail = ref(false)
+const hasRequestedPasswordReset = ref(false)
 
 // Services
 const route = useRoute()
@@ -83,12 +83,8 @@ async function saveUser() {
 			throw new Error(error || 'Failed to update user')
 		}
 
-		if (sendResetPasswordEmail.value) {
-			await sendPasswordReset()
-		} else {
-			addToast('User updated successfully')
-			router.push('/users')
-		}
+		addToast('User updated successfully')
+		router.push('/users')
 	} catch (error) {
 		addToast(error instanceof Error ? error.message : 'Failed to update user', { variant: 'danger' })
 	} finally {
@@ -97,6 +93,8 @@ async function saveUser() {
 }
 
 async function sendPasswordReset() {
+	hasRequestedPasswordReset.value = true
+
 	try {
 		const { resetPassword } = await import('@/services/users/users.reset-password')
 		const { success, error } = await resetPassword(userId)
@@ -105,10 +103,11 @@ async function sendPasswordReset() {
 			throw new Error(error || 'Failed to send password reset email')
 		}
 
-		addToast('User updated and password reset email sent')
-		router.push('/users')
+		addToast('Password reset email sent successfully')
+		// Don't redirect - stay on the page
 	} catch (error) {
 		addToast(error instanceof Error ? error.message : 'Failed to send password reset email', { variant: 'danger' })
+		hasRequestedPasswordReset.value = false
 	}
 }
 
@@ -190,11 +189,19 @@ onMounted(async () => {
 
 						<!-- Reset Password -->
 						<nord-fieldset label="Reset Password" class="n-margin-bs-s">
-							<nord-checkbox
-								v-model="sendResetPasswordEmail"
-								label="Send password reset email"
-								help-text="If selected, a password reset link will be sent to the user's email"
-							/>
+							<nord-stack gap="m" direction="vertical" align-items="stretch">
+								<p class="n-color-text-weaker">
+									Send a password reset email to this user. The user will receive an email with a link to reset their password.
+								</p>
+								<nord-button
+									variant="secondary"
+									type="button"
+									:disabled="hasRequestedPasswordReset"
+									@click="sendPasswordReset"
+								>
+									{{ hasRequestedPasswordReset ? 'Sending...' : 'Send Password Reset' }}
+								</nord-button>
+							</nord-stack>
 						</nord-fieldset>
 					</div>
 

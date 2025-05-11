@@ -11,6 +11,7 @@ const user = useSupabaseUser()
 const addToast = useAddToast()
 
 const isLoading = ref(false)
+const hasRequestedPasswordReset = ref(false)
 
 const formErrors = ref<AccountSchemaErrorsType | null>(null)
 const formData = ref<AccountSchemaType>({
@@ -20,17 +21,6 @@ const formData = ref<AccountSchemaType>({
 	newPassword: '',
 	confirmNewPassword: '',
 })
-
-const shouldRevealCurrentPassword = ref(false)
-const shouldRevealNewPassword = ref(false)
-
-function onRevealCurrentPasswordCheckboxChange(event: Event) {
-	shouldRevealCurrentPassword.value = (event.target as HTMLInputElement).checked
-}
-
-function onRevealNewPasswordCheckboxChange(event: Event) {
-	shouldRevealNewPassword.value = (event.target as HTMLInputElement).checked
-}
 
 async function handleSubmit() {
 	isLoading.value = true
@@ -109,6 +99,28 @@ async function handleDeleteUser() {
 	}
 }
 
+async function sendPasswordReset() {
+	hasRequestedPasswordReset.value = true
+
+	try {
+		const supabase = useSupabaseClient()
+
+		const { error } = await supabase.auth.resetPasswordForEmail(
+			formData.value.email || '',
+			{ redirectTo: `${window.location.origin}/reset-password` },
+		)
+
+		if (error) {
+			throw error
+		}
+
+		addToast('Password reset email sent successfully')
+	} catch (error) {
+		addToast(error instanceof Error ? error.message : 'Failed to send password reset email', { variant: 'danger' })
+		hasRequestedPasswordReset.value = false
+	}
+}
+
 onMounted(async () => {
 	const { data, error } = await getProfile()
 	if (data?.name) {
@@ -165,65 +177,6 @@ onMounted(async () => {
 									:error="formErrors?.name?._errors"
 								/>
 
-								<!-- Current Password -->
-								<div class="relative">
-									<nord-input
-										v-model="formData.currentPassword"
-										label="Current Password"
-										expand
-										name="currentPassword"
-										autocomplete="current-password"
-										placeholder="Enter your current password"
-										size="m"
-										:type="shouldRevealCurrentPassword ? 'text' : 'password'"
-										:error="formErrors?.currentPassword?._errors"
-									/>
-									<nord-checkbox
-										v-model="shouldRevealCurrentPassword"
-										:label="`${shouldRevealCurrentPassword ? 'Hide' : 'Show'} current password`"
-										class="mt-2"
-										size="s"
-										@change="onRevealCurrentPasswordCheckboxChange"
-									/>
-								</div>
-
-								<!-- New Password -->
-								<div class="n-stack n-gap-m relative">
-									<nord-input
-										v-model="formData.newPassword"
-										label="New Password"
-										expand
-										name="newPassword"
-										autocomplete="new-password"
-										placeholder="Enter your new password"
-										size="m"
-										:type="shouldRevealNewPassword ? 'text' : 'password'"
-										:error="formErrors?.newPassword?._errors"
-									/>
-
-									<!-- Confirm New Password -->
-									<div>
-										<nord-input
-											v-model="formData.confirmNewPassword"
-											label="Confirm New Password"
-											expand
-											name="confirmNewPassword"
-											autocomplete="new-password"
-											placeholder="Confirm your new password"
-											size="m"
-											:type="shouldRevealNewPassword ? 'text' : 'password'"
-											:error="formErrors?.confirmNewPassword?._errors"
-										/>
-										<nord-checkbox
-											v-model="shouldRevealNewPassword"
-											:label="`${shouldRevealNewPassword ? 'Hide' : 'Show'} confirm password`"
-											class="mt-2"
-											size="s"
-											@change="onRevealNewPasswordCheckboxChange"
-										/>
-									</div>
-								</div>
-
 								<!-- Submit Button -->
 								<nord-button
 									type="submit"
@@ -236,6 +189,28 @@ onMounted(async () => {
 								</nord-button>
 							</nord-stack>
 						</form>
+
+						<!-- Add the password reset section after the form -->
+						<div class="py-5">
+							<nord-divider />
+						</div>
+
+						<!-- Password Reset Section -->
+						<nord-fieldset label="Reset Password" class="n-margin-bs-s">
+							<nord-stack gap="m" direction="vertical" align-items="stretch">
+								<p class="n-color-text-weaker">
+									Alternatively, you can request a password reset email. This will send an email with a link to reset your password.
+								</p>
+								<nord-button
+									variant="secondary"
+									type="button"
+									:disabled="hasRequestedPasswordReset"
+									@click="sendPasswordReset"
+								>
+									{{ hasRequestedPasswordReset ? 'Sending...' : 'Send Password Reset' }}
+								</nord-button>
+							</nord-stack>
+						</nord-fieldset>
 
 						<div class="py-5">
 							<nord-divider />
