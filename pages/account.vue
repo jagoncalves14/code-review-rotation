@@ -1,74 +1,109 @@
 <script setup lang="ts">
-import type { AccountSchemaErrorsType, AccountSchemaType } from '@/schemas/account'
+import { useAddToast } from '@/composables/useAddToast'
 import getProfile from '@/services/auth/auth.get-profile'
 import updateAccount from '@/services/auth/auth.update-account'
+import { onMounted, ref } from 'vue'
 
+// Define page metadata
 definePageMeta({
-	title: 'Nordhealth DS — Account',
+	layout: 'default',
+	title: 'Account Settings',
 })
+
+// State
+interface AccountForm {
+	name: string
+	email: string
+}
 
 const user = useSupabaseUser()
 const addToast = useAddToast()
-
-const isLoading = ref(false)
-const hasRequestedPasswordReset = ref(false)
-
-const formErrors = ref<AccountSchemaErrorsType | null>(null)
-const formData = ref<AccountSchemaType>({
+const loading = ref(true)
+const saving = ref(false)
+const resetPasswordInProgress = ref(false)
+const accountForm = ref<AccountForm>({
 	name: '',
 	email: user.value?.email || '',
-	currentPassword: '',
-	newPassword: '',
-	confirmNewPassword: '',
 })
+const isAdmin = ref(false)
 
-async function handleSubmit() {
-	isLoading.value = true
-	formErrors.value = null
+// Methods
+async function fetchProfile() {
+	loading.value = true
 
 	try {
-		const result = await updateAccount(formData.value)
+		const { data, error } = await getProfile()
 
-		if (result.success) {
-			addToast('Account updated successfully')
-			// Reset form on success
-			formData.value = {
-				name: formData.value.name,
-				email: formData.value.email,
-				currentPassword: '',
-				newPassword: '',
-				confirmNewPassword: '',
+		if (error) {
+			throw error
+		}
+
+		if (data) {
+			accountForm.value = {
+				name: data.name || '',
+				email: user.value?.email || '',
 			}
-		} else {
-			if (result.error === 'Current password is incorrect') {
-				formErrors.value = Object.assign({}, formErrors.value);
-				(formErrors.value as AccountSchemaErrorsType)!.currentPassword = {
-					_errors: [result.error],
-				}
-				return
-			}
-			addToast(result.error || 'Failed to update account', { variant: 'danger' })
+			isAdmin.value = !!data.is_admin
 		}
 	} catch (error) {
-		if (error instanceof Error) {
-			addToast(error.message, { variant: 'danger' })
-		}
+		addToast(error instanceof Error ? error.message : 'Failed to load profile', { variant: 'danger' })
 	} finally {
-		isLoading.value = false
+		loading.value = false
 	}
 }
 
-async function handleDeleteClick() {
-	const confirmedDeletion = confirm('Are you sure you want to delete your account?')
+async function saveAccount() {
+	saving.value = true
+
+	try {
+		const result = await updateAccount({
+			name: accountForm.value.name,
+			email: accountForm.value.email,
+			currentPassword: '',
+			newPassword: '',
+			confirmNewPassword: '',
+		})
+
+		if (!result.success) {
+			throw new Error(result.error || 'Failed to update account')
+		}
+
+		addToast('Account updated successfully')
+	} catch (error) {
+		addToast(error instanceof Error ? error.message : 'Failed to update account', { variant: 'danger' })
+	} finally {
+		saving.value = false
+	}
+}
+
+async function sendPasswordReset() {
+	resetPasswordInProgress.value = true
+
+	try {
+		const supabase = useSupabaseClient()
+
+		const { error } = await supabase.auth.resetPasswordForEmail(
+			accountForm.value.email,
+			{ redirectTo: `${window.location.origin}/reset-password` },
+		)
+
+		if (error) {
+			throw error
+		}
+
+		addToast('Password reset email sent successfully')
+	} catch (error) {
+		addToast(error instanceof Error ? error.message : 'Failed to send password reset email', { variant: 'danger' })
+	} finally {
+		resetPasswordInProgress.value = false
+	}
+}
+
+async function handleDeleteAccount() {
+	const confirmedDeletion = confirm('Are you sure you want to delete your account? This action cannot be undone.')
 	if (!confirmedDeletion) {
 		return
 	}
-
-	handleDeleteUser()
-}
-
-async function handleDeleteUser() {
-	isLoading.value = true
 
 	try {
 		const userId = user?.value?.id
@@ -91,150 +126,102 @@ async function handleDeleteUser() {
 		addToast('Your account has been deleted.')
 		navigateTo('/sign-in')
 	} catch (error) {
-		if (error instanceof Error) {
-			addToast(error.message, { variant: 'danger' })
-		}
-	} finally {
-		isLoading.value = false
+		addToast(error instanceof Error ? error.message : 'Failed to delete account', { variant: 'danger' })
 	}
 }
 
-async function sendPasswordReset() {
-	hasRequestedPasswordReset.value = true
-
-	try {
-		const supabase = useSupabaseClient()
-
-		const { error } = await supabase.auth.resetPasswordForEmail(
-			formData.value.email || '',
-			{ redirectTo: `${window.location.origin}/reset-password` },
-		)
-
-		if (error) {
-			throw error
-		}
-
-		addToast('Password reset email sent successfully')
-	} catch (error) {
-		addToast(error instanceof Error ? error.message : 'Failed to send password reset email', { variant: 'danger' })
-		hasRequestedPasswordReset.value = false
-	}
-}
-
-onMounted(async () => {
-	const { data, error } = await getProfile()
-	if (data?.name) {
-		formData.value.name = data.name
-	}
-	if (error) {
-		console.error('Error fetching profile:', error.message)
-	}
-})
+// Lifecycle
+onMounted(fetchProfile)
 </script>
 
 <template>
-	<main class="n-stack-horizontal mx-auto h-full w-full max-w-screen-md">
-		<nord-card class="md:my-10" padding="l">
-			<nord-stack class="stack" direction="vertical" align-items="stretch">
-				<div class="py-5 md:px-10">
-					<h1>Account</h1>
-				</div>
+	<section class="n-spacing-m n-margin-bs-xl mx-auto w-full max-w-screen-xl">
+		<nord-card padding="l">
+			<div slot="header">
+				<h1 class="n-typography-headline-large">Account Settings</h1>
+			</div>
 
-				<nord-card gap="l" direction="vertical" padding="l" class="pb-10 md:px-10">
-					<div slot="header">Account Details</div>
-					<nord-stack gap="l" direction="vertical" align-items="stretch">
-						<p class="n-color-text-weaker">Update your account details here.</p>
+			<div class="n-spacing-m">
+				<nord-spinner v-if="loading" size="large" class="n-margin-m" />
 
-						<!-- Account Update Form -->
-						<form @submit.prevent="handleSubmit">
-							<nord-stack gap="m" direction="vertical" align-items="stretch">
-								<!-- Email -->
-								<nord-input
-									v-model="formData.email"
-									label="Email"
-									expand
-									required
-									hide-required
-									name="email"
-									autocomplete="email"
-									type="email"
-									placeholder="Enter your email"
-									size="m"
-									:error="formErrors?.email?._errors"
-								/>
+				<div v-else>
+					<!-- Admin Banner -->
+					<nord-alert v-if="isAdmin" variant="info" class="n-margin-bs-l">
+						<nord-icon slot="prefix" name="lock" />
+						You are an admin and can manage other users and projects.
+					</nord-alert>
 
-								<!-- Name -->
-								<nord-input
-									v-model="formData.name"
-									label="Name"
-									expand
-									required
-									hide-required
-									name="name"
-									autocomplete="name"
-									placeholder="Enter your name"
-									size="m"
-									:error="formErrors?.name?._errors"
-								/>
+					<form class="n-stack n-gap-m" @submit.prevent="saveAccount">
+						<!-- User Information -->
+						<div class="n-stack n-gap-m">
+							<!-- Name Field -->
+							<nord-input
+								v-model="accountForm.name"
+								label="Name"
+								required
+								expand
+							/>
 
-								<!-- Submit Button -->
-								<nord-button
-									type="submit"
-									expand
-									variant="primary"
-									size="m"
-									:disabled="isLoading"
-								>
-									{{ isLoading ? 'Saving...' : 'Save Changes' }}
-								</nord-button>
-							</nord-stack>
-						</form>
-
-						<!-- Add the password reset section after the form -->
-						<div class="py-5">
-							<nord-divider />
+							<!-- Email Field (Read-only) -->
+							<nord-input
+								v-model="accountForm.email"
+								label="Email"
+								readonly
+								disabled
+								expand
+							/>
 						</div>
 
-						<!-- Password Reset Section -->
-						<nord-fieldset label="Reset Password" class="n-margin-bs-s">
-							<nord-stack gap="m" direction="vertical" align-items="stretch">
-								<p class="n-color-text-weaker">
-									Alternatively, you can request a password reset email. This will send an email with a link to reset your password.
-								</p>
-								<nord-button
-									variant="secondary"
-									type="button"
-									:disabled="hasRequestedPasswordReset"
-									@click="sendPasswordReset"
-								>
-									{{ hasRequestedPasswordReset ? 'Sending...' : 'Send Password Reset' }}
-								</nord-button>
-							</nord-stack>
-						</nord-fieldset>
-
-						<div class="py-5">
-							<nord-divider />
+						<!-- Account Update Button -->
+						<div class="n-stack n-stack-horizontal-e n-gap-s">
+							<nord-button
+								variant="primary"
+								type="submit"
+								:disabled="saving"
+							>
+								{{ saving ? 'Saving...' : 'Save Changes' }}
+							</nord-button>
 						</div>
+					</form>
 
-						<!-- Delete Account Section -->
-						<nord-stack class="stack" direction="vertical" align-items="stretch">
-							<h2 class="n-color-text-danger">Delete your account</h2>
+					<nord-divider class="n-margin-bs-l n-margin-be-l" />
+
+					<!-- Password Reset Section -->
+					<nord-fieldset label="Reset Password" class="n-margin-bs-s">
+						<nord-stack gap="m" direction="vertical" align-items="stretch">
 							<p class="n-color-text-weaker">
-								Once you delete your account, there is no going back. <br>Please be certain.
+								Request a password reset email. This will send an email with a link to reset your password.
+							</p>
+							<nord-button
+								variant="secondary"
+								type="button"
+								:disabled="resetPasswordInProgress"
+								@click="sendPasswordReset"
+							>
+								{{ resetPasswordInProgress ? 'Sending...' : 'Send Password Reset' }}
+							</nord-button>
+						</nord-stack>
+					</nord-fieldset>
+
+					<nord-divider class="n-margin-bs-l n-margin-be-l" />
+
+					<!-- Delete Account Section -->
+					<nord-fieldset label="Delete Account" class="n-margin-bs-s">
+						<nord-stack gap="m" direction="vertical" align-items="stretch">
+							<p class="n-color-text-danger">
+								Once you delete your account, there is no going back. Please be certain.
 							</p>
 							<nord-button
 								variant="danger"
 								type="button"
-								size="m"
-								:disabled="isLoading"
-								@click="handleDeleteClick"
+								@click="handleDeleteAccount"
 							>
-								Delete account
+								Delete Account
 							</nord-button>
 						</nord-stack>
-					</nord-stack>
-				</nord-card>
-			</nord-stack>
+					</nord-fieldset>
+				</div>
+			</div>
 		</nord-card>
-	</main>
+	</section>
 </template>
