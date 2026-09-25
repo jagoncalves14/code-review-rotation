@@ -9,6 +9,7 @@
 		"generate": "nuxi generate",
 		"postinstall": "nuxi prepare",
 		"start": "node .output/server/index.mjs",
+		"docker:up": "docker compose up --build",
 		"start:generate": "npx serve .output/public",
 		"lint": "eslint \"**/*.{vue,js,ts,tsx}\"",
 		"lint:fix": "eslint \"**/*.{vue,js,ts,tsx}\" --fix",
@@ -24,6 +25,7 @@
 		"unit:watch": "TZ=UTC vitest watch"
 	},
 	"dependencies": {
+		"@googleworkspace/cli": "^0.3.5",
 		"@headlessui/vue": "^1.7.23",
 		"@nordhealth/components": "^3.22.0",
 		"@nordhealth/css": "^3.4.0",
@@ -38,7 +40,6 @@
 		"@iconify-json/twemoji": "^1.2.2",
 		"@nuxt/test-utils": "^3.17.2",
 		"@nuxtjs/color-mode": "^3.5.2",
-		"@nuxtjs/supabase": "^1.5.0",
 		"@playwright/test": "^1.51.1",
 		"@unocss/eslint-config": "^0.58.5",
 		"@unocss/eslint-plugin": "^0.58.5",
@@ -47,6 +48,7 @@
 		"@unocss/preset-icons": "^0.58.5",
 		"@unocss/preset-wind": "^0.58.5",
 		"@unocss/transformer-directives": "^0.58.5",
+		"@vitejs/plugin-vue": "^6.0.9",
 		"@vueform/multiselect": "2.6.11",
 		"@vueuse/nuxt": "^13.0.0",
 		"consola": "^3.4.2",

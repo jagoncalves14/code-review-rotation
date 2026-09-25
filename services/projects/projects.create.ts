@@ -3,9 +3,10 @@ import type { Database } from '@/types/supabase'
 import { useSupabaseClient, useSupabaseUser } from '#imports'
 
 interface CreateProjectResponse {
-	success: boolean
-	projectId?: string
-	error?: string
+	data: {
+		id: string
+	} | null
+	error: Error | null
 }
 
 export default async function createProject(payload: ProjectSchemaType): Promise<CreateProjectResponse> {
@@ -13,60 +14,59 @@ export default async function createProject(payload: ProjectSchemaType): Promise
 	const user = useSupabaseUser()
 
 	if (!user.value) {
-		return { success: false, error: 'Not authenticated' }
+		return { data: null, error: new Error('Not authenticated') }
 	}
 
 	try {
-		// Create the initial project
-		const { data: project, error: projectError } = await supabase
+		// Create the project
+		const { data, error } = await supabase
 			.from('projects')
 			.insert({
 				name: payload.name,
 				description: payload.description || null,
-				rotation_period_days: payload.rotationPeriodDays,
-				rotation_start_day: payload.startDate,
+				rotation_period_days: payload.rotation_period_days,
+				rotation_start_day: payload.rotation_start_day,
 				created_by: user.value.id,
-				reviewers_count: payload.reviewers?.length || 0,
-				state: 'active',
+				reviewers_count: payload.reviewers_count,
+				state: payload.state,
 			})
 			.select('id')
 			.single()
 
-		if (projectError) {
-			return { success: false, error: projectError.message }
-		}
-		if (!project) {
-			return { success: false, error: 'Failed to create project' }
+		if (error) {
+			return { data: null, error: new Error(error.message) }
 		}
 
-		// Create the first rotation with assignees and reviewers
-		const { data: rotation, error: rotationError } = await supabase
-			.from('rotations')
-			.insert({
-				project_id: project.id,
-				start_date: payload.startDate,
-				end_date: new Date(new Date(payload.startDate).getTime() + (payload.rotationPeriodDays * 24 * 60 * 60 * 1000)).toISOString().split('T')[0],
-				assignees: payload.assignees || [],
-				reviewers: payload.reviewers || [],
+		// Once project is created, we can add assignees and reviewers
+		if (data) {
+			// Add project members (assignees and reviewers)
+			const assigneePromises = payload.assignee_ids.map(async (assigneeId) => {
+				return supabase.from('project_members').insert({
+					project_id: data.id,
+					profile_id: assigneeId,
+					role: 'assignee',
+				})
 			})
-			.select('id')
-			.single()
 
-		if (rotationError) {
-			return { success: false, error: rotationError.message }
-		}
-		if (!rotation) {
-			return { success: false, error: 'Failed to create rotation' }
+			const reviewerPromises = payload.reviewer_ids.map(async (reviewerId) => {
+				return supabase.from('project_members').insert({
+					project_id: data.id,
+					profile_id: reviewerId,
+					role: 'reviewer',
+				})
+			})
+
+			// Execute all promises
+			await Promise.all([...assigneePromises, ...reviewerPromises])
+
+			return { data, error: null }
 		}
 
-		return {
-			success: true,
-			projectId: project.id,
-		}
+		return { data: null, error: new Error('Failed to create project') }
 	} catch (error) {
 		return {
-			success: false,
-			error: error instanceof Error ? error.message : 'An unexpected error occurred',
+			data: null,
+			error: error instanceof Error ? error : new Error('An unexpected error occurred'),
 		}
 	}
 }

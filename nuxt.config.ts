@@ -2,7 +2,6 @@ export default defineNuxtConfig({
 	modules: [
 		'@vueuse/nuxt',
 		'@unocss/nuxt',
-		'@nuxtjs/supabase',
 	],
 
 	ssr: false,
@@ -13,11 +12,9 @@ export default defineNuxtConfig({
 		},
 	},
 
-	supabase: {
-		redirectOptions: {
-			login: '/sign-in',
-			callback: '/',
-			exclude: ['sign-in', '/sign-up', '/forgot-password', '/reset-password'],
+	runtimeConfig: {
+		public: {
+			localDev: true,
 		},
 	},
 

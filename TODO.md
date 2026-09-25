@@ -64,7 +64,7 @@ Create a new rotation project.
 
 ---
 
-## 5. **Project Edit Page**
+## 5. **Project Settings Edit Page**
 
 Update the configuration of an existing project.
 
@@ -106,22 +106,22 @@ Landing page with list of all projects and high-level information.
 ## 7. **Project Detail Page**
 
 In-depth view of an individual project with ability to inspect and manage rotations.
-
-### 🔍 Filter Bar:
-- **Date Range Selector**: select a specific rotation period (e.g. Apr 1–Apr 15)
-- **Edit Mode Toggle** (to allow rotation editing if needed)
+It shows the current and past rotations. Past rotations are shown one at the time, with a select filter to choose which rotation to show.
 
 ### 📋 Main Content:
 - **Rotation Table**
   - Rows: Assignees
   - Columns: Assigned reviewers
+  - The reviewers column is editable. Clicking on it, transforms the content into a BaseCombobox, where the user can select more reviewers and remove existing ones.
 - **Action Buttons:**
-  - “Trigger New Rotation” (manual)
-  - “Edit Rotation” (active mode only)
-  - "Back to Projects"
+  - “Trigger New Rotation" button (manual)
+  - “Edit Settings" button (active mode only)
+  - "Save" button
+  - "Back to Projects" button
 
 ### 🧠 Notes:
 - Should include validation if fixed reviewers are unavailable.
+- Save is disabled and greyed out if no changes were made.
 - Option to preview upcoming rotation.
 
 ---

@@ -31,7 +31,7 @@ export default async function getAllUsers(
 		}
 
 		// Handle filtering based on search query
-		let filteredData = data || []
+		let filteredData = (data || []) as unknown as User[]
 		if (searchQuery && searchQuery.trim() !== '') {
 			const query = searchQuery.toLowerCase()
 			filteredData = filteredData.filter((user: User) =>

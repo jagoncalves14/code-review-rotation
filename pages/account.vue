@@ -16,6 +16,14 @@ interface AccountForm {
 	email: string
 }
 
+interface _Profile {
+	id: string
+	name: string
+	is_admin: boolean
+	created_at: string
+	updated_at: string
+}
+
 const user = useSupabaseUser()
 const addToast = useAddToast()
 const loading = ref(true)

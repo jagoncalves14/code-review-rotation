@@ -9,28 +9,34 @@ export const ProjectSchema = z.object({
 		.string()
 		.max(500, { message: 'Description is too long.' })
 		.optional(),
-	rotationPeriodDays: z
+	rotation_period_days: z
 		.number()
 		.int()
 		.min(1, { message: 'Rotation period must be at least 1 day.' })
 		.max(365, { message: 'Rotation period cannot exceed 365 days.' }),
-	startDate: z
+	rotation_start_day: z
 		.string()
 		.min(1, { message: 'Start date is required.' }),
-	assignees: z
+	reviewers_count: z
+		.number()
+		.int()
+		.min(1, { message: 'Number of reviewers must be at least 1.' })
+		.max(10, { message: 'Number of reviewers cannot exceed 10.' }),
+	assignee_ids: z
 		.array(
 			z.string()
-				.min(1, { message: 'Assignee name cannot be empty.' })
-				.max(100, { message: 'Assignee name is too long.' }),
+				.min(1, { message: 'Assignee ID cannot be empty.' }),
 		)
-		.min(1, { message: 'At least one assignee role is required.' }),
-	reviewers: z
+		.min(1, { message: 'At least one assignee is required.' }),
+	reviewer_ids: z
 		.array(
 			z.string()
-				.min(1, { message: 'Reviewer name cannot be empty.' })
-				.max(100, { message: 'Reviewer name is too long.' }),
+				.min(1, { message: 'Reviewer ID cannot be empty.' }),
 		)
-		.min(1, { message: 'At least one reviewer role is required.' }),
+		.min(1, { message: 'At least one reviewer is required.' }),
+	state: z
+		.enum(['draft', 'active', 'inactive'])
+		.default('draft'),
 })
 
 export type ProjectSchemaType = z.infer<typeof ProjectSchema>
