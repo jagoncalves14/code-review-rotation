@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { RotationMember } from '@/services/rotations/rotations.get-by-project'
-import { updateRotationMember } from '@/services/rotations/rotations.update-rotation-member'
 import { computed, ref } from 'vue'
+import { updateRotationMember } from '@/services/rotations/rotations.update-rotation-member'
 import BaseCombobox from '~/components/BaseCombobox.vue'
 
 const props = defineProps<{

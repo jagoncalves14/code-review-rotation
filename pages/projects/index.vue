@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Project, ProjectState } from '@/types/supabase'
-import { useAddToast } from '@/composables/useAddToast'
-import getAllProjects from '@/services/projects/projects.get-all'
 import { refDebounced } from '@vueuse/core'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useAddToast } from '@/composables/useAddToast'
+import getAllProjects from '@/services/projects/projects.get-all'
 
 // Define page metadata for layout
 definePageMeta({

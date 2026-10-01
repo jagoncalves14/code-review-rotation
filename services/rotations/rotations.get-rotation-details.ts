@@ -1,5 +1,5 @@
-import type { Database } from '@/types/supabase'
 import type { Rotation, RotationMember } from './rotations.get-by-project'
+import type { Database } from '@/types/supabase'
 import { useSupabaseClient } from '#imports'
 
 interface RotationDetails {

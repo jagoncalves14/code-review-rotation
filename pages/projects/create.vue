@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { ProjectState } from '@/types/supabase'
-import { useAddToast } from '@/composables/useAddToast'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAddToast } from '@/composables/useAddToast'
 import BaseCombobox from '~/components/BaseCombobox.vue'
 // Define page metadata
 definePageMeta({

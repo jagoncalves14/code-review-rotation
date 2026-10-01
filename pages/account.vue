@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import { useAddToast } from '@/composables/useAddToast'
 import getProfile from '@/services/auth/auth.get-profile'
 import updateAccount from '@/services/auth/auth.update-account'
-import { onMounted, ref } from 'vue'
 
 // Define page metadata
 definePageMeta({

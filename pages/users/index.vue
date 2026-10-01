@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useAddToast } from '@/composables/useAddToast'
-import getAllUsers from '@/services/users/users.get-all'
 import { refDebounced } from '@vueuse/core'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useAddToast } from '@/composables/useAddToast'
+import getAllUsers from '@/services/users/users.get-all'
 
 // Define page metadata for layout and authorization
 definePageMeta({

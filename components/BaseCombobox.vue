@@ -41,20 +41,20 @@ export type Size = 's' | 'm' | 'l'
 
 export type OptionAsValue = Pick<Option, 'value' | 'label'>
 
-export type CSSInlineSizeString =
-	| `var(--n-${string})` // TODO: Improve this type for more accurate type checks
-	| `${number}${'px' | 'em' | 'rem' | '%' | 'ch'}`
-	| 'auto'
-	| 'none'
+export type CSSInlineSizeString
+	= | `var(--n-${string})` // TODO: Improve this type for more accurate type checks
+		| `${number}${'px' | 'em' | 'rem' | '%' | 'ch'}`
+		| 'auto'
+		| 'none'
 
 export type VueInstance = ComponentPublicInstance
 export type MaybeElementRef<T extends MaybeElement = MaybeElement> = MaybeRef<T>
-export type MaybeElement =
-	| HTMLElement
-	| SVGElement
-	| VueInstance
-	| undefined
-	| null
+export type MaybeElement
+	= | HTMLElement
+		| SVGElement
+		| VueInstance
+		| undefined
+		| null
 
 /**
  * This is a wrapper on top of [vueform/multiselect](https://github.com/vueform/multiselect),

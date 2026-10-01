@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useAddToast } from '@/composables/useAddToast'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useAddToast } from '@/composables/useAddToast'
 
 // Define page metadata
 definePageMeta({

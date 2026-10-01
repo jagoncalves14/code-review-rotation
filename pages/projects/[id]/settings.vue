@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { ProjectState } from '@/types/supabase'
+import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAddToast } from '@/composables/useAddToast'
 import deleteProject from '@/services/projects/projects.delete'
 import getProjectById from '@/services/projects/projects.get-by-id'
 import updateProject from '@/services/projects/projects.update'
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import BaseCombobox from '~/components/BaseCombobox.vue'
 
 // Get route params

@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { useAddToast } from '@/composables/useAddToast'
 import getProjectById from '@/services/projects/projects.get-by-id'
 import { getRotationsByProject } from '@/services/rotations/rotations.get-by-project'
 import { getRotationDetails } from '@/services/rotations/rotations.get-rotation-details'
 import { triggerNewRotation } from '@/services/rotations/rotations.trigger-new'
-import { useRouter } from 'vue-router'
 import RotationTable from '~/components/RotationTable.vue'
 
 // Get route params
